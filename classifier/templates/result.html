@@ -69,20 +69,88 @@
 <div class="result-page">
     <h1 class="result-title">Prediction Result</h1>
 
-    <div class="result-box">
+    <div class="result-box" id="status-block">
+        {% if job.status == "done" %}
         <p class="result-label">
             Label:
-            <span>{{ result.label }}</span>
+            <span>{{ job.prediction }}</span>
         </p>
 
         <p class="result-confidence">
             Confidence:
-            <span>{{ result.confidence|floatformat:2 }}</span>
+            <span>{{ job.confidence|floatformat:2 }}</span>
         </p>
+        {% elif job.status == "failed" %}
+        <p class="result-label">
+            Status:
+            <span>Failed</span>
+        </p>
+        <p class="result-confidence">
+            Error:
+            <span>{{ job.error_message }}</span>
+        </p>
+        {% else %}
+        <p class="result-label">
+            Status:
+            <span>{{ job.status|capfirst }}</span>
+        </p>
+        <p class="result-confidence">
+            Your job is processing. This page will update automatically.
+        </p>
+        {% endif %}
     </div>
+
+    <p>Job ID: {{ job.id }}</p>
 
     <a href="{% url 'upload' %}" class="btn-primary">
         Predict another image
     </a>
 </div>
+
+<script>
+const jobStatusUrl = "{% url 'job_status' job.id %}";
+const statusBlock = document.getElementById("status-block");
+
+function renderStatus(data) {
+    if (data.status === "done") {
+        const conf = data.confidence === null ? "" : Number(data.confidence).toFixed(2);
+        statusBlock.innerHTML = `
+            <p class="result-label">Label: <span>${data.label || ""}</span></p>
+            <p class="result-confidence">Confidence: <span>${conf}</span></p>
+        `;
+        return;
+    }
+
+    if (data.status === "failed") {
+        statusBlock.innerHTML = `
+            <p class="result-label">Status: <span>Failed</span></p>
+            <p class="result-confidence">Error: <span>${data.error || ""}</span></p>
+        `;
+        return;
+    }
+
+    statusBlock.innerHTML = `
+        <p class="result-label">Status: <span>${data.status}</span></p>
+        <p class="result-confidence">Your job is processing. This page will update automatically.</p>
+    `;
+}
+
+function pollStatus() {
+    fetch(jobStatusUrl, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+        .then((response) => response.json())
+        .then((data) => {
+            renderStatus(data);
+            if (data.status === "done" || data.status === "failed") {
+                return;
+            }
+            setTimeout(pollStatus, 3000);
+        })
+        .catch(() => setTimeout(pollStatus, 5000));
+}
+
+const initialStatus = "{{ job.status }}";
+if (initialStatus !== "done" && initialStatus !== "failed") {
+    setTimeout(pollStatus, 1000);
+}
+</script>
 {% endblock %}
