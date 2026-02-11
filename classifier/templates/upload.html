@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <h1 class="page-title">Upload Image</h1>
+
+    <form method="post" enctype="multipart/form-data" class="card">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn-primary full">Predict</button>
+    </form>
+</div>
+{% endblock %}

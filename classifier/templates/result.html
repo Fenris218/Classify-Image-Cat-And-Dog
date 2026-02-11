@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+:root {
+    --primary-start: #667eea;
+    --primary-end: #764ba2;
+    --primary-gradient: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+    --shadow-color: rgba(102, 126, 234, 0.25);
+}
+
+.result-page {
+    max-width: 600px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 15px 45px var(--shadow-color);
+    text-align: center;
+}
+
+.result-title {
+    font-size: 2em;
+    font-weight: 800;
+    margin-bottom: 30px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.result-box {
+    background: #f7f8ff;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.result-label,
+.result-confidence {
+    font-size: 1.2em;
+    margin: 12px 0;
+}
+
+.result-label span,
+.result-confidence span {
+    font-weight: 700;
+    color: var(--primary-start);
+}
+
+.btn-primary {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 30px;
+    text-align: center;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    background: var(--primary-gradient);
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
+}
+</style>
+
+<div class="result-page">
+    <h1 class="result-title">Prediction Result</h1>
+
+    <div class="result-box">
+        <p class="result-label">
+            Label:
+            <span>{{ result.label }}</span>
+        </p>
+
+        <p class="result-confidence">
+            Confidence:
+            <span>{{ result.confidence|floatformat:2 }}</span>
+        </p>
+    </div>
+
+    <a href="{% url 'upload' %}" class="btn-primary">
+        Predict another image
+    </a>
+</div>
+{% endblock %}

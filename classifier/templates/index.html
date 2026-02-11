@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Classify image cat and dog{% endblock %}
+
+{% block extra_style %}
+<style>
+    .main-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 60px;
+    }
+
+    .feature-list {
+        color: white;
+        max-width: 420px;
+    }
+
+    .feature-list h2 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+    }
+
+    .feature-list ul {
+        list-style: none;
+    }
+
+    .feature-list li {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+    }
+
+    .conversion-card {
+        background: rgba(255,255,255,0.95);
+        padding: 50px;
+        border-radius: 20px;
+        text-align: center;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .conversion-card .icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+    }
+
+    .conversion-card h1 {
+        font-size: 2.3em;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .conversion-card p {
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .btn-upload {
+        display: inline-block;
+        padding: 16px 40px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        margin-bottom: 15px;
+        font-size: 1.05em;
+    }
+
+    .btn-upload.secondary {
+        background: #eee;
+        color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+
+    <div class="feature-list">
+        <h2>Classify images of cats and dogs, simple and safe</h2>
+        <ul>
+            <li>✅ Super fast classification speed</li>
+            <li>🔒 Absolute data security</li>
+            <li>💡 No software installation required</li>
+        </ul>
+    </div>
+
+    <div class="conversion-card">
+        <div class="icon">📄 ➜ 📝</div>
+        <h1>Classify image cat and dog</h1>
+        <p>Classifying images of cats and dogs is very convenient</p>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'upload' %}" class="btn-upload">Choose image</a><br>
+            <a href="{% url 'history' %}" class="btn-upload secondary">View History</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn-upload">Login to continue</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

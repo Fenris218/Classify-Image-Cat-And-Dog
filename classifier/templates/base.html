@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Classify image cat and dog{% endblock %}</title>
+
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-nav {
+            max-width: 1200px;
+            margin: auto;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .hello-user {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            padding: 8px 18px;
+            background: #667eea;
+            color: white;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #556cd6;
+        }
+
+        .btn-outline {
+            padding: 8px 18px;
+            border: 1px solid #667eea;
+            color: #667eea;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* ===== PAGE CONTAINER ===== */
+        .page-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 60px 40px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+/* ===== SIGNUP MODAL (same style as login) ===== */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            width: 380px;
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-title {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6a5af9;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6a5af9, #8f7cff);
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .switch-link a {
+            color: #6a5af9;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #d8000c;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+
+    {% block extra_style %}{% endblock %}
+</head>
+<body>
+
+<header class="header">
+    <div class="header-nav">
+        <a href="/" class="logo-text">Classify Image Cat and Dog</a>
+
+        <div class="header-right">
+            {% if user.is_authenticated %}
+                <span class="hello-user">Hello <b>{{ user.username }}</b></span>
+                <a href="{% url 'logout' %}" class="btn-primary">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-outline">Login</a>
+                <a href="{% url 'signup' %}" class="btn-primary">Sign up</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="page-container">
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

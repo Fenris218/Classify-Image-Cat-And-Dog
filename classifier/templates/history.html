@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+
+{% block content %}
+{% comment %} <style>
+/* ===== CSS GIỮ NGUYÊN NHƯ BẠN ===== */
+:root {
+    --primary-start: #667eea;
+    --primary-end: #764ba2;
+    --primary-gradient: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+    --shadow-color: rgba(102, 126, 234, 0.25);
+}
+
+body {
+    background: var(--primary-gradient);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* (các class khác giữ nguyên) */
+</style> {% endcomment %}
+
+<div class="history-container">
+    <div class="header-content">
+        <a href="{% url 'upload' %}" class="btn-back">Back</a>
+        <h1 class="header-text">Prediction History</h1>
+    </div>
+
+    {% if histories %}
+    <table class="styled-table">
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Image</th>
+            <th>Prediction</th>
+            <th>Confidence</th>
+            <th>Uploaded at</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in histories %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+
+            <!-- IMAGE -->
+            <td>
+                {{ item.image.name|slice:"8:" }}
+            </td>
+
+            <!-- PREDICTION -->
+            <td>
+                <span class="status-badge"
+                      style="color:#4CAF50;border:1px solid #4CAF50;background:#E8F5E9;">
+                    {{ item.prediction }}
+                </span>
+            </td>
+
+            <!-- CONFIDENCE -->
+            <td>
+                {{ item.confidence|floatformat:2 }}
+            </td>
+
+            <!-- DATE -->
+            <td>
+                {{ item.uploaded_at|date:"d/m/Y H:i" }}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="no-data">
+            No prediction history yet. Upload an image to get started 🚀
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
