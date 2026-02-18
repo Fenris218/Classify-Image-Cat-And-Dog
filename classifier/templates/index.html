@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Classify image cat and dog{% endblock %}
 
 {% block extra_style %}
@@ -9,6 +9,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 60px;
+        position: relative;
+        z-index: 1;
     }
 
     .feature-list {
@@ -48,7 +50,7 @@
     .conversion-card h1 {
         font-size: 2.3em;
         margin-bottom: 10px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: linear-gradient(135deg, #8fbc8f, #70a970);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -62,7 +64,7 @@
         display: inline-block;
         padding: 16px 40px;
         border-radius: 50px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: linear-gradient(135deg, #8fbc8f, #70a970);
         color: white;
         margin-bottom: 15px;
         font-size: 1.05em;
@@ -72,6 +74,32 @@
         background: #eee;
         color: #333;
     }
+body {
+    position: relative;
+    margin: 0;
+    min-height: 100vh;
+    background-image: url("{% static 'images/background.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* lớp phủ tối */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        to right,
+        rgba(0,0,0,0.75),
+        rgba(0,0,0,0.3)
+    );
+    z-index: -1;
+}
+
+
+
+
 </style>
 {% endblock %}
 
@@ -81,14 +109,14 @@
     <div class="feature-list">
         <h2>Classify images of cats and dogs, simple and safe</h2>
         <ul>
-            <li>✅ Super fast classification speed</li>
-            <li>🔒 Absolute data security</li>
-            <li>💡 No software installation required</li>
+            <li> Super fast classification speed</li>
+            <li> Absolute data security</li>
+            <li> No software installation required</li>
         </ul>
     </div>
 
     <div class="conversion-card">
-        <div class="icon">📄 ➜ 📝</div>
+        <div class="icon"> 🐱  🐶</div>
         <h1>Classify image cat and dog</h1>
         <p>Classifying images of cats and dogs is very convenient</p>
 

@@ -1,13 +1,105 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="page-container">
+
     <h1 class="page-title">Upload Image</h1>
 
     <form method="post" enctype="multipart/form-data" class="card">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn-primary full">Predict</button>
+
+        <!-- Drag Drop Upload UI -->
+        <div class="file-container">
+
+            <div class="file-wrapper">
+
+                <!-- Django form input -->
+                <input 
+                    type="file"
+                    name="image"
+                    id="js-file-input"
+                    class="file-input"
+                    accept="image/*"
+                    required
+                >
+
+                <div class="file-content">
+                    <div class="file-infos">
+                        <p class="file-icon">
+                            <i class="fas fa-file-upload fa-5x"></i>
+                            <span class="icon-shadow"></span>
+                            <span>
+                                Click to browse
+                                <span class="has-drag"> or drop file here</span>
+                            </span>
+                        </p>
+                    </div>
+
+                    <p id="js-file-name" class="file-name">
+                        No file selected
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <button type="submit" class="btn-primary full">
+            Predict
+        </button>
+
     </form>
+
 </div>
+{% endblock %}
+{% block extra_script %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    let input = document.getElementById('js-file-input');
+    let fileContent = document.querySelector('.file-content');
+    if (!input || !fileContent) return;
+
+    // Xử lý chọn file
+    input.addEventListener("change", function () {
+        if (this.files.length > 0) {
+            document.getElementById('js-file-name').innerHTML = this.files[0].name;
+        }
+        input.classList.remove('file-input--active');
+    });
+
+    // Xử lý kéo file vào
+    input.addEventListener("dragenter", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        input.classList.add('file-input--active');
+    });
+
+    input.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        input.classList.add('file-input--active');
+    });
+
+    // Xử lý kéo file ra
+    input.addEventListener("dragleave", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        input.classList.remove('file-input--active');
+    });
+
+    // Xử lý thả file
+    input.addEventListener("drop", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        input.classList.remove('file-input--active');
+        
+        if (e.dataTransfer.files.length > 0) {
+            input.files = e.dataTransfer.files;
+            document.getElementById('js-file-name').innerHTML = e.dataTransfer.files[0].name;
+        }
+    });
+
+});
+</script>
 {% endblock %}

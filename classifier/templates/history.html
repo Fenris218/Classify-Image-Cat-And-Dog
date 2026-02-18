@@ -2,29 +2,100 @@
 {% block title %}History{% endblock %}
 
 {% block content %}
-{% comment %} <style>
-/* ===== CSS GIỮ NGUYÊN NHƯ BẠN ===== */
-:root {
-    --primary-start: #667eea;
-    --primary-end: #764ba2;
-    --primary-gradient: linear-gradient(135deg, var(--primary-start), var(--primary-end));
-    --shadow-color: rgba(102, 126, 234, 0.25);
+<style>
+    /* ===== HISTORY PAGE ===== */
+
+.history-container {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    animation: fadeIn 0.4s ease;
 }
 
-body {
-    background: var(--primary-gradient);
-    min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.header-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
 }
 
-/* (các class khác giữ nguyên) */
-</style> {% endcomment %}
+.btn-back {
+    padding: 8px 16px;
+    background: #f1f1f1;
+    border-radius: 8px;
+    color: #333;
+    font-weight: 500;
+    transition: 0.3s;
+}
 
+.btn-back:hover {
+    background: #8fbc8f;
+    color: white;
+}
+
+/* ===== TABLE STYLE ===== */
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.styled-table thead {
+    background: linear-gradient(135deg, #8fbc8f, #70a970);
+    color: white;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 14px 16px;
+    text-align: center;
+}
+
+.styled-table th {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #f1f1f1;
+    transition: 0.2s;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f9f9ff;
+    transform: scale(1.01);
+}
+
+/* ===== BADGE ===== */
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* ===== NO DATA ===== */
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #777;
+}
+</style>
 <div class="history-container">
     <div class="header-content">
         <a href="{% url 'upload' %}" class="btn-back">Back</a>
