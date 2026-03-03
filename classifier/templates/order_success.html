@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Đơn Hàng Thành Công - DogShop{% endblock %}
+
+{% block extra_style %}
+<style>
+    .success-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        text-align: center;
+    }
+    
+    .success-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .success-message {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .success-message h1 {
+        color: #51cf66;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .success-message p {
+        color: #666;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+    
+    .order-info {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 4px;
+        margin: 1.5rem 0;
+    }
+    
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .info-row:last-child {
+        border: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .info-value {
+        color: #666;
+    }
+    
+    .order-items {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+    
+    .order-items h2 {
+        font-size: 1.3rem;
+        text-align: left;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+    }
+    
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .item-row:last-child {
+        border: none;
+    }
+    
+    .item-name {
+        font-weight: 600;
+    }
+    
+    .item-price {
+        color: #ff6b6b;
+        font-weight: bold;
+    }
+    
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #ff6b6b;
+        border-top: 2px solid #eee;
+        margin-top: 1rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+    
+    .action-buttons .btn {
+        padding: 0.75rem 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="success-container">
+        <div class="success-icon">✅</div>
+        
+        <div class="success-message">
+            <h1>Đơn Hàng Thành Công!</h1>
+            <p>Cảm ơn bạn đã mua hàng tại DogShop</p>
+            <p>Đơn hàng của bạn đã được xác nhận và sẽ được giao sớm nhất có thể.</p>
+        </div>
+
+        <div class="order-info">
+            <div class="info-row">
+                <span class="info-label">Mã Đơn Hàng:</span>
+                <span class="info-value">#{{ order.id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Trạng Thái:</span>
+                <span class="info-value"><strong style="color: #51cf66;">{{ order.get_status_display }}</strong></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Người Nhận:</span>
+                <span class="info-value">{{ order.customer_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Địa Chỉ Giao:</span>
+                <span class="info-value">{{ order.customer_address }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Ngày Đặt:</span>
+                <span class="info-value">{{ order.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+        </div>
+
+        <div class="order-items">
+            <h2>Sản Phẩm Đã Đặt</h2>
+            {% for item in order_items %}
+                <div class="item-row">
+                    <div>
+                        <div class="item-name">{{ item.dog.name }}</div>
+                        <div style="color: #667eea; font-size: 0.9rem;">{{ item.dog.breed.name }}</div>
+                    </div>
+                    <div class="item-price">{{ item.price }} ₫</div>
+                </div>
+            {% endfor %}
+            <div class="total-row">
+                <span>Tổng Cộng:</span>
+                <span>{{ order.total_price }} ₫</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'order_history' %}" class="btn">Xem Đơn Hàng</a>
+            <a href="{% url 'dogs_list' %}" class="btn secondary">Tiếp Tục Mua Sắm</a>
+        </div>
+    </div>
+{% endblock %}

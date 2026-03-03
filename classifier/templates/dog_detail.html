@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dog.name }} - DogShop{% endblock %}
+
+{% block extra_style %}
+<style>
+    .dog-detail {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .dog-detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    
+    .dog-image-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .dog-image {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #f0f0f0;
+    }
+    
+    .dog-info-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .breed-info {
+        color: #667eea;
+        font-weight: 500;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .price {
+        font-size: 2.5rem;
+        color: #ff6b6b;
+        font-weight: bold;
+        margin: 1.5rem 0;
+    }
+    
+    .details-table {
+        width: 100%;
+        margin: 1.5rem 0;
+        border-collapse: collapse;
+    }
+    
+    .details-table tr {
+        border-bottom: 1px solid #eee;
+    }
+    
+    .details-table td {
+        padding: 0.75rem 0;
+    }
+    
+    .details-table td:first-child {
+        font-weight: 600;
+        color: #666;
+        width: 150px;
+    }
+    
+    .description {
+        color: #666;
+        margin: 1.5rem 0;
+        line-height: 1.8;
+    }
+    
+    .seller-info {
+        background: #f9f9f9;
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1.5rem 0;
+    }
+    
+    .seller-info p {
+        margin: 0.5rem 0;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .action-buttons .btn {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .related-section {
+        margin-top: 3rem;
+    }
+    
+    .related-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .related-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    
+    .related-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .related-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        background: #f0f0f0;
+    }
+    
+    .related-info {
+        padding: 1rem;
+    }
+    
+    .related-name {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .related-price {
+        color: #ff6b6b;
+        font-weight: bold;
+    }
+    
+    @media (max-width: 768px) {
+        .dog-detail-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <a href="{% url 'dogs_list' %}" style="color: #667eea; text-decoration: none;">← Quay lại danh sách</a>
+
+    <div class="dog-detail">
+        <div class="dog-detail-layout">
+            <div class="dog-image-section">
+                {% if dog.image %}
+                    <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="dog-image">
+                {% else %}
+                    <div class="dog-image" style="display: flex; align-items: center; justify-content: center; font-size: 5rem;">🐕</div>
+                {% endif %}
+            </div>
+
+            <div class="dog-info-section">
+                <h1>{{ dog.name }}</h1>
+                <div class="breed-info">{{ dog.breed.name }}</div>
+                <div class="price">{{ dog.price }} ₫</div>
+
+                <table class="details-table">
+                    <tr>
+                        <td>Tuổi:</td>
+                        <td>{{ dog.age_months }} tháng</td>
+                    </tr>
+                    <tr>
+                        <td>Màu:</td>
+                        <td>{{ dog.color }}</td>
+                    </tr>
+                </table>
+
+                {% if dog.description %}
+                    <div class="description">
+                        <strong>Mô tả:</strong><br>
+                        {{ dog.description }}
+                    </div>
+                {% endif %}
+
+                <div class="seller-info">
+                    <p><strong>Người bán:</strong> {{ dog.seller.username }}</p>
+                    <p><strong>Ngày đăng:</strong> {{ dog.created_at|date:"d/m/Y" }}</p>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{% url 'add_to_cart' dog.id %}" class="btn">🛒 Thêm Vào Giỏ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if related_dogs %}
+        <div class="related-section">
+            <h2>🐾 Các Chú Chó Khác Cùng Giống</h2>
+            <div class="related-grid">
+                {% for related_dog in related_dogs %}
+                    <div class="related-card">
+                        {% if related_dog.image %}
+                            <img src="{{ related_dog.image.url }}" alt="{{ related_dog.name }}" class="related-image">
+                        {% else %}
+                            <div class="related-image" style="display: flex; align-items: center; justify-content: center;">🐕</div>
+                        {% endif %}
+                        <div class="related-info">
+                            <div class="related-name">{{ related_dog.name }}</div>
+                            <div class="related-price">{{ related_dog.price }} ₫</div>
+                            <a href="{% url 'dog_detail' related_dog.id %}" class="btn" style="display: block; text-align: center; margin-top: 0.5rem;">Chi Tiết</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

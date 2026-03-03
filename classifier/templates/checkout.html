@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}Thanh Toán - DogShop{% endblock %}
+
+{% block extra_style %}
+<style>
+    .checkout-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+    
+    .checkout-form,
+    .order-review {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .checkout-form h2,
+    .order-review h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 0.95rem;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .submit-btn:hover {
+        background: #5568d3;
+    }
+    
+    .review-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+    
+    .review-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: #f0f0f0;
+    }
+    
+    .review-details {
+        flex: 1;
+    }
+    
+    .review-name {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .review-price {
+        color: #ff6b6b;
+        font-weight: bold;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .summary-row:last-child {
+        border: none;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 1rem 0;
+        margin-top: 1rem;
+        color: #ff6b6b;
+    }
+    
+    @media (max-width: 768px) {
+        .checkout-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .submit-btn {
+            margin-top: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>💳 Thanh Toán</h1>
+
+    <div class="checkout-container">
+        <form method="post" class="checkout-form">
+            {% csrf_token %}
+            <h2>Thông Tin Giao Hàng</h2>
+
+            <div class="form-group">
+                <label for="name">Họ và Tên *</label>
+                <input type="text" id="name" name="name" value="{{ user.first_name|default:'' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Số Điện Thoại *</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Địa Chỉ Giao Hàng *</label>
+                <textarea id="address" name="address" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Tiếp Tục Thanh Toán</button>
+        </form>
+
+        <div class="order-review">
+            <h2>Chi Tiết Đơn Hàng</h2>
+            
+            {% for item in cart_items %}
+                <div class="review-item">
+                    {% if item.dog.image %}
+                        <img src="{{ item.dog.image.url }}" alt="{{ item.dog.name }}" class="review-image">
+                    {% else %}
+                        <div class="review-image" style="display: flex; align-items: center; justify-content: center;">🐕</div>
+                    {% endif %}
+                    <div class="review-details">
+                        <div class="review-name">{{ item.dog.name }}</div>
+                        <div style="color: #667eea; margin-bottom: 0.5rem;">{{ item.dog.breed.name }}</div>
+                        <div class="review-price">{{ item.dog.price }} ₫</div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="summary-row">
+                <span>Tổng Tiền:</span>
+                <span>{{ total_price }} ₫</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

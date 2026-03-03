@@ -3,256 +3,203 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Classify image cat and dog{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DogShop - Bán Chó Cảnh{% endblock %}</title>
 
     <style>
-        /* ===== RESET ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Segoe UI", Tahoma, sans-serif;
         }
-
+        
         body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #8fbc8f 0%, #70a970 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
         }
-
-        a {
-            text-decoration: none;
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
-        /* ===== HEADER ===== */
-        .header {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header-nav {
+        
+        nav {
             max-width: 1200px;
-            margin: auto;
-            padding: 15px 40px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 2rem;
         }
-
-        .logo {
-            height: 40px;
-        }
-
-        .header-right {
+        
+        nav .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 0.5rem;
         }
-
-        .hello-user {
-            color: #333;
-            font-weight: 500;
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
         }
-
-        .btn-primary {
-            padding: 8px 18px;
-            background: #8fbc8f;
+        
+        nav a {
             color: white;
-            border-radius: 6px;
-            transition: 0.3s;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
         }
-
-        .btn-primary:hover {
-            background: #8fbc8f;
+        
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
         }
-
-        .btn-outline {
-            padding: 8px 18px;
-            border: 1px solid #8fbc8f;
-            color: #8fbc8f;
-            border-radius: 6px;
-            transition: 0.3s;
+        
+        .user-menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
         }
-
-        .btn-outline:hover {
-            background: #8fbc8f;
+        
+        .cart-badge {
+            background: #ff6b6b;
             color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: -0.5rem;
         }
-
-        /* ===== PAGE CONTAINER ===== */
+        
         .page-container {
             max-width: 1200px;
-            margin: auto;
-            padding: 60px 40px;
+            margin: 2rem auto;
+            padding: 0 2rem;
         }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: #8fbc8f;
-        }
-
-/* ===== SIGNUP MODAL (same style as login) ===== */
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            width: 380px;
-            background: white;
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-title {
-            text-align: center;
-            margin-bottom: 24px;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #609f60;
-        }
-
         
-
-        .switch-link {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 14px;
-        }
-
-        .switch-link a {
-            color: #609f60;
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #667eea;
+            color: white;
             text-decoration: none;
-            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 0.95rem;
         }
-
-        .error {
-            background: #ffe5e5;
-            color: #d8000c;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 16px;
+        
+        .btn:hover {
+            background: #5568d3;
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+        }
+        
+        .btn.secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn.danger {
+            background: #ff6b6b;
+        }
+        
+        .btn.danger:hover {
+            background: #ff5252;
+        }
+        
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        
+        .alert.error {
+            background: #ffdddd;
+            border-left: 4px solid #ff6b6b;
+            color: #c33;
+        }
+        
+        .alert.success {
+            background: #ddffdd;
+            border-left: 4px solid #51cf66;
+            color: #2d5016;
+        }
+        
+        footer {
             text-align: center;
+            padding: 2rem;
+            background: #f9f9f9;
+            margin-top: 4rem;
+            color: #666;
+            border-top: 1px solid #ddd;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .file-container {
-    font-family: sans-serif;
-    font-size: 13pt;
-    color: #4d4d4d;
-    margin-bottom: 30px;
-}
-
-.file-wrapper {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    background-color: #e9ecef;
-    border-radius: 20px;
-    padding: 20px;
-}
-
-.file-input {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.file-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border: 5px dashed rgba(73, 80, 87, .6);
-    border-radius: 20px;
-    transition: 0.2s;
-}
-
-.file-input--active + .file-content {
-    background: #e3e5e8;
-}
-
-.file-infos {
-    position: absolute;
-    width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    text-align: center;
-}
-
-.file-icon {
-    color: rgba(73, 80, 87, .6);
-}
-
-.file-name {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
-}
-
-
+        
+        {% block extra_style %}{% endblock %}
     </style>
-
-    {% block extra_style %}{% endblock %}
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="{% url 'home' %}" class="logo">🐕 DogShop</a>
+            <ul>
+                <li><a href="{% url 'home' %}">Trang Chủ</a></li>
+                <li><a href="{% url 'dogs_list' %}">Cửa Hàng</a></li>
+                <li><a href="{% url 'detect_breed' %}">🧠 Nhận Diện Giống</a></li>
+            </ul>
+            <div class="user-menu">
+                <a href="{% url 'view_cart' %}" style="position: relative;">
+                    🛒 Giỏ Hàng
+                    {% if user.is_authenticated %}
+                        {% if user.cart.items.count > 0 %}
+                            <span class="cart-badge">{{ user.cart.items.count }}</span>
+                        {% endif %}
+                    {% endif %}
+                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'order_history' %}">📦 Đơn Hàng</a>
+                    <span>{{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="btn">Đăng Xuất</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn">Đăng Nhập</a>
+                    <a href="{% url 'signup' %}" class="btn secondary">Đăng Ký</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
 
-<header class="header">
-    <div class="header-nav">
-        <a href="/" class="logo-text">Classify Image Cat and Dog</a>
+    <main class="page-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
 
-        <div class="header-right">
-            {% if user.is_authenticated %}
-                <span class="hello-user">Hello <b>{{ user.username }}</b></span>
-                <a href="{% url 'logout' %}" class="btn-primary">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn-outline">Login</a>
-                <a href="{% url 'signup' %}" class="btn-primary">Sign up</a>
-            {% endif %}
-        </div>
-    </div>
-</header>
+    <footer>
+        <p>&copy; 2026 DogShop - Bán Chó Cảnh Hàng Đầu Việt Nam</p>
+        <p>Liên hệ: 0123-456-789 | Email: info@dogshop.vn</p>
+    </footer>
 
-<main class="page-container">
-    {% block content %}{% endblock %}
     {% block extra_script %}{% endblock %}
-
-</main>
-
 </body>
 </html>
+
 
 
 
