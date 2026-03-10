@@ -268,6 +268,8 @@ def add_to_cart_view(request, dog_id):
         cart_item.quantity += 1
         cart_item.save()
     
+    if request.GET.get('buy_now'):
+        return redirect('checkout')
     return redirect('view_cart')
 
 

@@ -1,255 +1,99 @@
 {% extends 'base.html' %}
 
-{% block title %}Nhận Diện Giống Chó - DogShop{% endblock %}
-
-{% block extra_style %}
-<style>
-    .detect-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    .detect-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .detect-card h2 {
-        font-size: 1.5rem;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    
-    .detect-description {
-        text-align: center;
-        color: #666;
-        margin-bottom: 2rem;
-        line-height: 1.6;
-    }
-    
-    .file-container {
-        font-family: sans-serif;
-        font-size: 13pt;
-        color: #4d4d4d;
-        margin-bottom: 30px;
-    }
-
-    .file-wrapper {
-        position: relative;
-        width: 100%;
-        height: 300px;
-        background-color: #e9ecef;
-        border-radius: 20px;
-        padding: 20px;
-    }
-
-    .file-input {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-        z-index: 10;
-    }
-
-    .file-content {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        border: 5px dashed rgba(102, 126, 234, 0.6);
-        border-radius: 20px;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-    }
-
-    .file-input--active + .file-content {
-        background: #e3e5e8;
-        border-color: #667eea;
-    }
-
-    .file-infos {
-        text-align: center;
-    }
-
-    .file-icon {
-        color: rgba(102, 126, 234, 0.6);
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-
-    .file-text {
-        color: #667eea;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-
-    .file-subtext {
-        color: #999;
-        font-size: 0.9rem;
-    }
-    
-    .submit-btn {
-        width: 100%;
-        padding: 1rem;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.3s;
-        margin-top: 1rem;
-    }
-    
-    .submit-btn:hover {
-        background: #5568d3;
-    }
-    
-    .features {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-top: 2rem;
-    }
-    
-    .feature {
-        background: #f0f7ff;
-        padding: 1rem;
-        border-radius: 4px;
-        text-align: center;
-    }
-    
-    .feature-icon {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .feature-text {
-        font-size: 0.9rem;
-        color: #666;
-    }
-    
-    .preview-container {
-        margin-top: 2rem;
-        text-align: center;
-        display: none;
-    }
-    
-    .preview-container.show {
-        display: block;
-    }
-    
-    .preview-image {
-        max-width: 100%;
-        max-height: 400px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 1rem;
-    }
-</style>
-{% endblock %}
+{% block title %}Nhận Diện Giống Chó AI - DogShop{% endblock %}
 
 {% block content %}
-    <div class="detect-container">
-        <div class="detect-card">
-            <h2>🧠 Nhận Diện Giống Chó</h2>
-            <p class="detect-description">
-                Tải lên ảnh chó của bạn và AI của chúng tôi sẽ nhận diện giống chó. 
-                Sau đó, chúng tôi sẽ hiển thị các chú chó cùng giống có sẵn tại cửa hàng!
-            </p>
+<div class="max-w-3xl mx-auto">
 
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div class="file-container">
-                    <div class="file-wrapper">
-                        <input type="file" id="id_image" name="image" class="file-input" accept="image/*" required>
-                        <div class="file-content">
-                            <div class="file-infos">
-                                <div class="file-icon">📷</div>
-                                <div class="file-text">Nhấp hoặc kéo ảnh vào đây</div>
-                                <div class="file-subtext">Hỗ trợ: JPG, PNG, GIF</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn">🔍 Nhận Diện Giống</button>
-            </form>
-            
-            <div class="preview-container" id="previewContainer">
-                <img id="previewImage" class="preview-image" alt="Preview ảnh">
-                <p style="color: #667eea; font-weight: 600;">✓ Ảnh đã sẵn sàng</p>
-            </div>
-
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-text">Nhanh chóng</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔒</div>
-                    <div class="feature-text">An toàn</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-text">Chính xác</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">📱</div>
-                    <div class="feature-text">Trên Mọi Thiết Bị</div>
-                </div>
-            </div>
-        </div>
+  <!-- Header -->
+  <div class="text-center mb-10">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl mb-4 shadow-lg">
+      <i class="fa-solid fa-brain text-white text-2xl"></i>
     </div>
+    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">Nhận Diện Giống Chó <span class="text-amber-500">AI</span></h1>
+    <p class="text-slate-500">Tải lên ảnh chú chó của bạn và AI sẽ xác định giống trong vài giây.</p>
+  </div>
 
-    <script>
-        const fileInput = document.getElementById('id_image');
-        const fileWrapper = document.querySelector('.file-wrapper');
-        const previewContainer = document.getElementById('previewContainer');
-        const previewImage = document.getElementById('previewImage');
-        
-        // Hiển thị ảnh preview khi chọn file
-        fileInput.addEventListener('change', (e) => {
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    previewImage.src = event.target.result;
-                    previewContainer.classList.add('show');
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            }
-        });
-        
-        fileInput.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileInput.classList.add('file-input--active');
-        });
-        
-        fileInput.addEventListener('dragleave', () => {
-            fileInput.classList.remove('file-input--active');
-        });
-        
-        fileInput.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileInput.classList.remove('file-input--active');
-            fileInput.files = e.dataTransfer.files;
-            
-            // Hiển thị preview sau khi drop file
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    previewImage.src = event.target.result;
-                    previewContainer.classList.add('show');
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            }
-        });
-    </script>
+  <!-- Upload Card -->
+  <div class="bg-white rounded-3xl border border-slate-100 shadow-md p-8">
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
+      {% csrf_token %}
+
+      <!-- Drop Zone -->
+      <label for="id_image"
+        class="flex flex-col items-center justify-center w-full min-h-[220px] rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50 cursor-pointer hover:bg-amber-100 transition-colors group mb-6"
+        id="dropLabel">
+        <div id="uploadPlaceholder" class="text-center">
+          <i class="fa-solid fa-cloud-arrow-up text-5xl text-amber-300 group-hover:text-amber-400 transition-colors mb-3"></i>
+          <p class="font-semibold text-slate-700">Kéo thả ảnh vào đây</p>
+          <p class="text-sm text-slate-400 mt-1">hoặc click để chọn tệp</p>
+          <p class="text-xs text-slate-300 mt-2">JPG, PNG, WEBP — tối đa 10MB</p>
+        </div>
+        <img id="imgPreview" src="" alt="Preview" class="hidden max-h-48 rounded-xl object-contain" />
+        <input type="file" name="image" id="id_image" accept="image/*" class="hidden" />
+      </label>
+
+      {% if form.image.errors %}
+      <div class="flex items-center gap-2 bg-red-50 text-red-600 border border-red-200 rounded-xl px-4 py-3 text-sm mb-5">
+        <i class="fa-solid fa-circle-exclamation"></i> {{ form.image.errors.0 }}
+      </div>
+      {% endif %}
+
+      <button type="submit" id="submitBtn"
+        class="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl transition shadow-sm text-base">
+        <i class="fa-solid fa-magnifying-glass"></i> Phân Tích Ngay
+      </button>
+    </form>
+  </div>
+
+  <!-- How it works -->
+  <div class="mt-8 grid sm:grid-cols-3 gap-4">
+    <div class="bg-white rounded-2xl border border-slate-100 p-5 text-center card-hover">
+      <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i class="fa-solid fa-upload text-amber-600"></i>
+      </div>
+      <div class="font-bold text-slate-800 text-sm mb-1">1. Tải Ảnh Lên</div>
+      <div class="text-slate-400 text-xs">Chọn ảnh rõ nét của chó từ thiết bị</div>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-5 text-center card-hover">
+      <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i class="fa-solid fa-microchip text-amber-600"></i>
+      </div>
+      <div class="font-bold text-slate-800 text-sm mb-1">2. AI Phân Tích</div>
+      <div class="text-slate-400 text-xs">Mô hình deep learning xử lý ảnh</div>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-5 text-center card-hover">
+      <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i class="fa-solid fa-dog text-amber-600"></i>
+      </div>
+      <div class="font-bold text-slate-800 text-sm mb-1">3. Xem Kết Quả</div>
+      <div class="text-slate-400 text-xs">Nhận diện giống và độ chính xác</div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+  const input = document.getElementById('id_image');
+  const preview = document.getElementById('imgPreview');
+  const placeholder = document.getElementById('uploadPlaceholder');
+  input.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+      };
+      reader.readAsDataURL(this.files[0]);
+    }
+  });
+  document.getElementById('uploadForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+  });
+</script>
 {% endblock %}

@@ -1,176 +1,96 @@
 {% extends 'base.html' %}
 
-{% block title %}Thanh Toán - DogShop{% endblock %}
-
-{% block extra_style %}
-<style>
-    .payment-container {
-        max-width: 500px;
-        margin: 0 auto;
-    }
-    
-    .payment-form {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .payment-form h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-    
-    .order-summary {
-        background: #f9f9f9;
-        padding: 1rem;
-        border-radius: 4px;
-        margin-bottom: 2rem;
-    }
-    
-    .summary-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5rem 0;
-    }
-    
-    .summary-row:last-child {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #ff6b6b;
-        padding: 1rem 0;
-        border-top: 1px solid #eee;
-        margin-top: 0.5rem;
-    }
-    
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    
-    .form-group input {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 0.95rem;
-    }
-    
-    .form-group input:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    
-    .form-row {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 1rem;
-    }
-    
-    .alert {
-        padding: 1rem;
-        border-radius: 4px;
-        margin-bottom: 1rem;
-    }
-    
-    .alert.error {
-        background: #ffdddd;
-        color: #c33;
-        border: 1px solid #ff6b6b;
-    }
-    
-    .submit-btn {
-        width: 100%;
-        padding: 1rem;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    
-    .submit-btn:hover {
-        background: #5568d3;
-    }
-    
-    .note {
-        background: #e3f2fd;
-        padding: 1rem;
-        border-radius: 4px;
-        margin-bottom: 1rem;
-        font-size: 0.9rem;
-        color: #1565c0;
-    }
-</style>
-{% endblock %}
+{% block title %}Thanh Toán Thẻ - DogShop{% endblock %}
 
 {% block content %}
-    <div class="payment-container">
-        <div class="payment-form">
-            <h2>💳 Thanh Toán</h2>
+<div class="min-h-[60vh] flex items-start justify-center py-4">
+  <div class="w-full max-w-lg">
 
-            {% if error %}
-                <div class="alert error">{{ error }}</div>
-            {% endif %}
-
-            <div class="order-summary">
-                <div class="summary-row">
-                    <span>Đơn hàng:</span>
-                    <span>#{{ order.id }}</span>
-                </div>
-                <div class="summary-row">
-                    <span>Người nhận:</span>
-                    <span>{{ order.customer_name }}</span>
-                </div>
-                <div class="summary-row">
-                    <span>Địa chỉ:</span>
-                    <span>{{ order.customer_address|truncatewords:10 }}</span>
-                </div>
-                <div class="summary-row">
-                    <span>Tổng Tiền:</span>
-                    <span>{{ order.total_price }} ₫</span>
-                </div>
-            </div>
-
-            <div class="note">
-                ℹ️ <strong>Chế độ Thử Nghiệm:</strong> Đây là hệ thống thanh toán mô phỏng. Sử dụng bất kỳ số thẻ và mã CVV nào để thử.
-            </div>
-
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="card_number">Số Thẻ Tín Dụng *</label>
-                    <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="expiry">Ngày Hết Hạn (MM/YY) *</label>
-                        <input type="text" id="expiry" placeholder="12/25" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cvv">CVV *</label>
-                        <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="3" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="name">Tên Chủ Thẻ *</label>
-                    <input type="text" id="name" placeholder="JOHN SMITH" required>
-                </div>
-
-                <button type="submit" class="submit-btn">💳 Thanh Toán {{ order.total_price }} ₫</button>
-            </form>
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-amber-500 to-orange-400 p-6 text-white">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+            <i class="fa-solid fa-credit-card text-2xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-extrabold">Thanh Toán An Toàn</h1>
+            <p class="text-white/80 text-sm">Mã hóa SSL 256-bit</p>
+          </div>
+          <i class="fa-solid fa-shield-halved text-2xl ml-auto text-white/60"></i>
         </div>
+      </div>
+
+      <div class="p-8">
+        <!-- Order summary -->
+        <div class="bg-amber-50 rounded-2xl border border-amber-100 p-4 mb-6">
+          <h3 class="text-xs font-bold text-amber-700 uppercase tracking-wider mb-3"><i class="fa-solid fa-receipt mr-1.5"></i>Tóm Tắt Đơn Hàng</h3>
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm text-slate-600">
+              <span>Đơn hàng</span><span class="font-semibold">#{{ order.id }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-slate-600">
+              <span>Người nhận</span><span class="font-semibold">{{ order.customer_name }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-slate-600">
+              <span>Địa chỉ</span><span class="font-medium text-right max-w-[200px]">{{ order.customer_address|truncatewords:8 }}</span>
+            </div>
+            <div class="border-t border-amber-200 pt-2 flex justify-between">
+              <span class="font-bold text-slate-800">Tổng Tiền</span>
+              <span class="font-extrabold text-amber-600 text-lg">{{ order.total_price|floatformat:0 }} ₫</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test mode note -->
+        <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 mb-6 text-sm text-blue-700">
+          <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i>
+          <span><strong>Chế độ thử nghiệm:</strong> Dùng bất kỳ số thẻ nào để mô phỏng thanh toán.</span>
+        </div>
+
+        {% if error %}
+        <div class="flex items-center gap-3 bg-red-50 text-red-700 border border-red-200 rounded-xl px-4 py-3 text-sm mb-5">
+          <i class="fa-solid fa-circle-exclamation shrink-0"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="space-y-4">
+          {% csrf_token %}
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5"><i class="fa-solid fa-credit-card mr-1.5 text-amber-400"></i>Số Thẻ <span class="text-red-400">*</span></label>
+            <input type="text" name="card_number" placeholder="1234 5678 9012 3456" required maxlength="19"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngày Hết Hạn <span class="text-red-400">*</span></label>
+              <input type="text" placeholder="MM/YY" required maxlength="5"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">CVV <span class="text-red-400">*</span></label>
+              <input type="text" name="cvv" placeholder="123" required maxlength="3"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tên Chủ Thẻ <span class="text-red-400">*</span></label>
+            <input type="text" placeholder="NGUYEN VAN A" required
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-semibold uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+          </div>
+          <button type="submit" class="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl transition shadow-md text-base mt-2">
+            <i class="fa-solid fa-lock"></i> Thanh Toán {{ order.total_price|floatformat:0 }} ₫
+          </button>
+        </form>
+
+        <div class="flex items-center justify-center gap-6 mt-6 text-slate-300">
+          <i class="fa-brands fa-cc-visa text-2xl"></i>
+          <i class="fa-brands fa-cc-mastercard text-2xl"></i>
+          <i class="fa-brands fa-cc-jcb text-2xl"></i>
+          <i class="fa-brands fa-cc-amex text-2xl"></i>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 {% endblock %}

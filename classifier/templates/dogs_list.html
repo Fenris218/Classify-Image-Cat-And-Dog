@@ -1,150 +1,98 @@
 {% extends 'base.html' %}
 
-{% block title %}Danh Sách Chó - DogShop{% endblock %}
-
-{% block extra_style %}
-<style>
-    .filter-section {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    
-    .filter-form {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-    }
-    
-    .filter-form input, .filter-form select {
-        padding: 0.75rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 0.9rem;
-    }
-    
-    .dogs-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-    
-    .dog-card {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: transform 0.3s;
-    }
-    
-    .dog-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    }
-    
-    .dog-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        background: #f0f0f0;
-    }
-    
-    .dog-info {
-        padding: 1rem;
-    }
-    
-    .dog-name {
-        font-size: 1.3rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-    
-    .dog-breed {
-        color: #667eea;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-    
-    .dog-age {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .dog-color {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-    }
-    
-    .dog-price {
-        font-size: 1.5rem;
-        color: #ff6b6b;
-        font-weight: bold;
-        margin: 1rem 0;
-    }
-    
-    .dog-card .btn {
-        width: 100%;
-        text-align: center;
-        margin-top: 1rem;
-    }
-</style>
-{% endblock %}
+{% block title %}Cửa Hàng Chó - DogShop{% endblock %}
 
 {% block content %}
-    <h1>🐕 Danh Sách Chó Bán</h1>
-    
-    <div class="filter-section">
-        <form method="get" class="filter-form">
-            <select name="breed">
-                <option value="">-- Tất cả Giống --</option>
-                {% for breed in breeds %}
-                    <option value="{{ breed.id }}" {% if breed.id|stringformat:"s" == selected_breed %}selected{% endif %}>
-                        {{ breed.name }}
-                    </option>
-                {% endfor %}
-            </select>
-            
-            <input type="number" name="min_price" placeholder="Giá tối thiểu" value="{{ min_price|default:'' }}">
-            <input type="number" name="max_price" placeholder="Giá tối đa" value="{{ max_price|default:'' }}">
-            
-            <input type="text" name="search" placeholder="Tìm kiếm theo tên..." value="{{ search|default:'' }}">
-            
-            <select name="sort">
-                <option value="-created_at" {% if sort == "-created_at" %}selected{% endif %}>Mới nhất</option>
-                <option value="price" {% if sort == "price" %}selected{% endif %}>Giá: Thấp -> Cao</option>
-                <option value="-price" {% if sort == "-price" %}selected{% endif %}>Giá: Cao -> Thấp</option>
-            </select>
-            
-            <button type="submit" class="btn">Lọc</button>
-        </form>
-    </div>
+<div class="mb-8">
+  <h1 class="text-3xl font-extrabold text-slate-900">Cửa Hàng <span class="text-amber-500">Chó Cảnh</span></h1>
+  <p class="text-slate-500 mt-1">Tìm chú chó phù hợp với bạn</p>
+</div>
 
-    {% if dogs %}
-        <div class="dogs-grid">
-            {% for dog in dogs %}
-                <div class="dog-card">
-                    {% if dog.image %}
-                        <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="dog-image">
-                    {% else %}
-                        <div class="dog-image" style="display: flex; align-items: center; justify-content: center; font-size: 3rem;">🐕</div>
-                    {% endif %}
-                    <div class="dog-info">
-                        <div class="dog-name">{{ dog.name }}</div>
-                        <div class="dog-breed">{{ dog.breed.name }}</div>
-                        <div class="dog-age">Tuổi: {{ dog.age_months }} tháng</div>
-                        <div class="dog-color">Màu: {{ dog.color }}</div>
-                        <div class="dog-price">{{ dog.price }} ₫</div>
-                        <a href="{% url 'dog_detail' dog.id %}" class="btn">Xem Chi Tiết</a>
-                    </div>
-                </div>
-            {% endfor %}
+<!-- Filter bar -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-8">
+  <form method="get" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-end">
+    <div>
+      <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide">Giống chó</label>
+      <select name="breed" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition">
+        <option value="">– Tất cả giống –</option>
+        {% for breed in breeds %}
+          <option value="{{ breed.id }}" {% if breed.id|stringformat:"s" == selected_breed %}selected{% endif %}>{{ breed.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide">Giá tối thiểu</label>
+      <input type="number" name="min_price" placeholder="0 ₫" value="{{ min_price|default:'' }}"
+        class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+    </div>
+    <div>
+      <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide">Giá tối đa</label>
+      <input type="number" name="max_price" placeholder="∞ ₫" value="{{ max_price|default:'' }}"
+        class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+    </div>
+    <div class="lg:col-span-2">
+      <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide">Tìm kiếm</label>
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input type="text" name="search" placeholder="Tên chú chó..." value="{{ search|default:'' }}"
+          class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition" />
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <select name="sort" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition">
+        <option value="-created_at" {% if sort == "-created_at" %}selected{% endif %}>Mới nhất</option>
+        <option value="price" {% if sort == "price" %}selected{% endif %}>Giá: Thấp → Cao</option>
+        <option value="-price" {% if sort == "-price" %}selected{% endif %}>Giá: Cao → Thấp</option>
+      </select>
+      <button type="submit" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm transition-colors">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Results -->
+{% if dogs %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for dog in dogs %}
+    <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-slate-100/80 flex flex-col card-hover">
+      <div class="relative overflow-hidden bg-amber-50" style="height:210px">
+        {% if dog.image %}
+          <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+        {% else %}
+          <div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-dog text-6xl text-amber-300"></i></div>
+        {% endif %}
+        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200/50 shadow-sm">{{ dog.breed.name }}</span>
+      </div>
+      <div class="flex flex-col flex-1 p-4 gap-3">
+        <div class="flex items-start justify-between gap-2">
+          <h3 class="font-bold text-base text-slate-900">{{ dog.name }}</h3>
+          <div class="flex items-center gap-0.5 shrink-0">
+            <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+            <span class="text-xs text-slate-500 font-medium">5.0</span>
+          </div>
         </div>
-    {% else %}
-        <p style="text-align: center; color: #666; padding: 2rem;">Không tìm thấy chó nào. Vui lòng thử lại.</p>
-    {% endif %}
+        <div class="flex items-center gap-3 text-xs text-slate-500">
+          <span class="flex items-center gap-1"><i class="fa-regular fa-calendar text-slate-400"></i>{{ dog.age_months }} tháng</span>
+          <span class="flex items-center gap-1"><i class="fa-solid fa-palette text-slate-400"></i>{{ dog.color }}</span>
+        </div>
+        <div class="text-xl font-extrabold text-amber-600 mt-auto">{{ dog.price|floatformat:0 }} <span class="text-sm font-semibold text-slate-400">₫</span></div>
+        <div class="flex gap-2 mt-1">
+          <a href="{% url 'dog_detail' dog.id %}" class="flex-1 text-center py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Chi Tiết</a>
+          <a href="{% url 'add_to_cart' dog.id %}" class="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 rounded-xl transition-colors shadow-sm">
+            <i class="fa-solid fa-cart-plus text-xs"></i> Thêm Giỏ
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="text-center py-24 text-slate-400">
+    <i class="fa-solid fa-dog text-5xl mb-4 block text-slate-200"></i>
+    <p class="font-semibold text-lg text-slate-500">Không tìm thấy chó nào</p>
+    <p class="text-sm mt-1">Vui lòng thử lại với bộ lọc khác.</p>
+    <a href="{% url 'dogs_list' %}" class="inline-flex items-center gap-2 mt-6 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2.5 rounded-full transition"><i class="fa-solid fa-rotate-left"></i> Xóa bộ lọc</a>
+  </div>
+{% endif %}
 {% endblock %}

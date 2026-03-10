@@ -1,169 +1,514 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DogShop — Tìm Người Bạn Đồng Hành</title>
 
-{% block title %}Trang Chủ - DogShop{% endblock %}
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            amber: { 450: '#f0a030' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Segoe UI', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
 
-{% block extra_style %}
-<style>
-    .hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 4rem 2rem;
-        border-radius: 8px;
-        text-align: center;
-        margin-bottom: 3rem;
-    }
-    
-    .hero h1 {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-    
-    .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-    
-    .stat-box {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #667eea;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-label {
-        color: #666;
-        font-size: 1rem;
-    }
-    
-    .featured-section h2 {
-        font-size: 2rem;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-    
-    .dogs-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-    
-    .dog-card {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: transform 0.3s;
-    }
-    
-    .dog-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    }
-    
-    .dog-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        background: #f0f0f0;
-    }
-    
-    .dog-info {
-        padding: 1rem;
-    }
-    
-    .dog-name {
-        font-size: 1.3rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-    
-    .dog-breed {
-        color: #667eea;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-    
-    .dog-price {
-        font-size: 1.5rem;
-        color: #ff6b6b;
-        font-weight: bold;
-        margin: 1rem 0;
-    }
-    
-    .dog-card .btn {
-        width: 100%;
-        text-align: center;
-        margin-top: 1rem;
-    }
-</style>
-{% endblock %}
+  <!-- Font Awesome 6 Free -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-{% block content %}
-    <div class="hero">
-        <h1>🐕 Chào mừng đến DogShop</h1>
-        <p>Nơi bán những chú chó xinh xắn và đáng yêu nhất</p>
-        <a href="{% url 'dogs_list' %}" class="btn">Xem Danh Sách Chó</a>
-    </div>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <div class="stats">
-        <div class="stat-box">
-            <div class="stat-number">{{ dog_count }}</div>
-            <div class="stat-label">Chó bán hiện có</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number">{{ breed_count }}</div>
-            <div class="stat-label">Giống chó khác nhau</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Chất lượng đảm bảo</div>
-        </div>
-    </div>
+  <style>
+    body { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    .hero-bg {
+      background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 50%, #fef3c7 100%);
+    }
+    .ai-banner-bg {
+      background: linear-gradient(130deg, #b45309 0%, #d97706 40%, #f59e0b 75%, #fbbf24 100%);
+    }
+    .card-hover { transition: transform .25s ease, box-shadow .25s ease; }
+    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,.10); }
+    .nav-link {
+      position: relative;
+      transition: color .2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: #d97706;
+      transition: width .25s ease;
+      border-radius: 99px;
+    }
+    .nav-link:hover::after { width: 100%; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: #d97706; color: #fff;
+      padding: .75rem 1.75rem;
+      border-radius: 9999px;
+      font-weight: 600; font-size: .95rem;
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { background: #b45309; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(180,83,9,.3); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: .5rem;
+      border: 2px solid #d97706; color: #d97706;
+      padding: .75rem 1.75rem;
+      border-radius: 9999px;
+      font-weight: 600; font-size: .95rem;
+      transition: all .2s;
+    }
+    .btn-outline:hover { background: #d97706; color: #fff; transform: translateY(-2px); }
+    img.lazyload { background: #f1f5f9; }
+  </style>
+</head>
 
-    <div class="featured-section">
-        <h2>🌟 Chó Nổi Bật</h2>
-        {% if featured_dogs %}
-            <div class="dogs-grid">
-                {% for dog in featured_dogs %}
-                    <div class="dog-card">
-                        {% if dog.image %}
-                            <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="dog-image">
-                        {% else %}
-                            <div class="dog-image" style="display: flex; align-items: center; justify-content: center; font-size: 3rem;">🐕</div>
-                        {% endif %}
-                        <div class="dog-info">
-                            <div class="dog-name">{{ dog.name }}</div>
-                            <div class="dog-breed">{{ dog.breed.name }}</div>
-                            <div class="dog-price">{{ dog.price }} ₫</div>
-                            <a href="{% url 'dog_detail' dog.id %}" class="btn">Xem Chi Tiết</a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+  <!-- =========================================================
+       NAVBAR
+  ========================================================= -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-slate-100">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
+
+      <!-- Logo -->
+      <a href="{% url 'home' %}" class="flex items-center gap-2.5 shrink-0">
+        <span class="flex items-center justify-center w-9 h-9 bg-amber-500 rounded-xl text-white text-lg shadow-sm">
+          <i class="fa-solid fa-paw"></i>
+        </span>
+        <span class="font-black text-xl tracking-tight text-slate-800">Dog<span class="text-amber-500">Shop</span></span>
+      </a>
+
+      <!-- Center Links -->
+      <ul class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+        <li>
+          <a href="{% url 'home' %}" class="nav-link hover:text-amber-600">
+            <i class="fa-solid fa-house mr-1 text-xs"></i>Trang Chủ
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'dogs_list' %}" class="nav-link hover:text-amber-600">
+            <i class="fa-solid fa-store mr-1 text-xs"></i>Cửa Hàng
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'detect_breed' %}" class="nav-link hover:text-amber-600">
+            <i class="fa-solid fa-brain mr-1 text-xs"></i>Nhận Diện AI
+          </a>
+        </li>
+      </ul>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3 shrink-0">
+        <!-- Cart -->
+        <a href="{% url 'view_cart' %}" class="relative flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors px-2 py-1.5">
+          <i class="fa-solid fa-cart-shopping text-base"></i>
+          <span class="hidden sm:inline">Giỏ Hàng</span>
+          {% if user.is_authenticated %}
+            {% if user.cart.items.count > 0 %}
+              <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">{{ user.cart.items.count }}</span>
+            {% endif %}
+          {% endif %}
+        </a>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'order_history' %}" class="hidden sm:flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors px-2 py-1.5">
+            <i class="fa-solid fa-box"></i>
+            <span class="hidden lg:inline">Đơn Hàng</span>
+          </a>
+          <div class="flex items-center gap-2 text-sm text-slate-600 border-l border-slate-200 pl-3">
+            <span class="w-7 h-7 bg-amber-100 rounded-full flex items-center justify-center text-amber-700 font-bold text-xs uppercase">{{ user.username|first }}</span>
+            <span class="hidden lg:inline font-medium">{{ user.username }}</span>
+          </div>
+          <a href="{% url 'logout' %}" class="btn-outline !py-1.5 !px-4 !text-sm !border-slate-300 !text-slate-600 hover:!bg-slate-700 hover:!text-white hover:!border-slate-700">
+            Đăng Xuất
+          </a>
         {% else %}
-            <p style="text-align: center; color: #666;">Chưa có chó nào được đăng bán</p>
+          <a href="{% url 'login' %}" class="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors px-3 py-1.5">Đăng Nhập</a>
+          <a href="{% url 'signup' %}" class="btn-primary !py-2 !px-5 !text-sm">Đăng Ký</a>
         {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <!-- Flash Messages -->
+  {% if messages %}
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 pt-4 space-y-2">
+      {% for message in messages %}
+        <div class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium
+          {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200
+          {% else %}bg-green-50 text-green-700 border border-green-200{% endif %}">
+          <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- =========================================================
+       HERO SECTION
+  ========================================================= -->
+  <section class="hero-bg relative overflow-hidden pb-36 pt-16 lg:pt-24">
+    <!-- decorative circles -->
+    <div class="absolute -top-20 -right-20 w-96 h-96 bg-amber-200 rounded-full opacity-20 blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 -left-16 w-72 h-72 bg-orange-200 rounded-full opacity-25 blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+        <!-- Left: Copy -->
+        <div class="flex flex-col gap-6">
+          <div class="inline-flex items-center gap-2 self-start bg-amber-100 text-amber-700 text-xs font-semibold px-4 py-1.5 rounded-full border border-amber-200/60">
+            <i class="fa-solid fa-paw text-amber-500"></i>
+            Pet Store Hàng Đầu Việt Nam
+          </div>
+
+          <h1 class="text-5xl lg:text-6xl font-black text-slate-900 leading-[1.1] tracking-tight">
+            Tìm Người Bạn<br/>
+            <span class="text-amber-500">Đồng Hành</span><br/>
+            Hoàn Hảo
+          </h1>
+
+          <p class="text-lg text-slate-600 leading-relaxed max-w-lg">
+            Hàng trăm chú chó siêu dễ thương đang chờ bạn. Mỗi bé đều được chăm sóc kỹ lưỡng, tiêm phòng đầy đủ và sẵn sàng về nhà mới.
+          </p>
+
+          <div class="flex flex-wrap gap-4">
+            <a href="{% url 'dogs_list' %}" class="btn-primary text-base">
+              Xem Danh Sách
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="{% url 'detect_breed' %}" class="btn-outline text-base">
+              <i class="fa-solid fa-brain"></i>
+              Thử AI Nhận Diện
+            </a>
+          </div>
+
+          <!-- Trust badges -->
+          <div class="flex flex-wrap gap-6 pt-2">
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+              <i class="fa-solid fa-shield-halved text-amber-500"></i>
+              Tiêm phòng đầy đủ
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+              <i class="fa-solid fa-truck-fast text-amber-500"></i>
+              Giao tận nơi
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+              <i class="fa-solid fa-star text-amber-500"></i>
+              Đảm bảo chất lượng
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Hero Image -->
+        <div class="relative flex justify-center lg:justify-end">
+          <div class="relative w-full max-w-lg">
+            <!-- decorative ring -->
+            <div class="absolute inset-0 bg-amber-300 rounded-[2.5rem] rotate-3 opacity-20"></div>
+            <img
+              src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=700&q=85&fit=crop"
+              alt="Chú chó dễ thương tại DogShop"
+              class="relative w-full aspect-[4/3] object-cover rounded-[2rem] shadow-2xl"
+              loading="eager"
+            />
+            <!-- floating badge -->
+            <div class="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3 border border-slate-100">
+              <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600">
+                <i class="fa-solid fa-dog text-lg"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400 font-medium">Hiện có</div>
+                <div class="text-lg font-black text-slate-800">{{ dog_count }} chú chó</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       STATS CARDS (overlap hero bottom)
+  ========================================================= -->
+  <section class="relative -mt-16 z-10 max-w-5xl mx-auto px-6 lg:px-8 mb-20">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+      <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 flex items-center gap-5 card-hover">
+        <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-dog text-2xl text-amber-500"></i>
+        </div>
+        <div>
+          <div class="text-3xl font-black text-slate-900">{{ dog_count }}</div>
+          <div class="text-sm text-slate-500 font-medium mt-0.5">Chó đang bán</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 flex items-center gap-5 card-hover">
+        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-layer-group text-2xl text-orange-500"></i>
+        </div>
+        <div>
+          <div class="text-3xl font-black text-slate-900">{{ breed_count }}</div>
+          <div class="text-sm text-slate-500 font-medium mt-0.5">Giống chó khác nhau</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 flex items-center gap-5 card-hover">
+        <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-circle-check text-2xl text-green-500"></i>
+        </div>
+        <div>
+          <div class="text-3xl font-black text-slate-900">100%</div>
+          <div class="text-sm text-slate-500 font-medium mt-0.5">Chất lượng đảm bảo</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       FEATURED DOGS
+  ========================================================= -->
+  <section class="max-w-7xl mx-auto px-6 lg:px-8 mb-24">
+
+    <div class="flex items-end justify-between mb-10">
+      <div>
+        <p class="text-sm font-semibold text-amber-500 uppercase tracking-widest mb-2">
+          <i class="fa-solid fa-star mr-1"></i>Nổi bật
+        </p>
+        <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight">Những Chú Chó <span class="text-amber-500">Được Yêu Thích</span></h2>
+      </div>
+      <a href="{% url 'dogs_list' %}" class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors">
+        Xem tất cả
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
     </div>
 
-    <div style="background: #f0f7ff; padding: 2rem; border-radius: 8px; text-align: center;">
-        <h2 style="margin-bottom: 1rem;">🧠 Nhận Diện Giống Chó</h2>
-        <p style="margin-bottom: 1.5rem;">Tải ảnh lên để AI nhận diện giống chó của bạn</p>
-        <a href="{% url 'detect_breed' %}" class="btn">Nhận Diện Ngay</a>
+    {% if featured_dogs %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for dog in featured_dogs %}
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-slate-100/80 card-hover flex flex-col">
+          <!-- Image -->
+          <div class="relative overflow-hidden" style="height: 210px;">
+            {% if dog.image %}
+              <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+            {% else %}
+              <div class="w-full h-full bg-amber-50 flex items-center justify-center">
+                <i class="fa-solid fa-dog text-6xl text-amber-300"></i>
+              </div>
+            {% endif %}
+            <div class="absolute top-3 left-3">
+              <span class="bg-white/90 backdrop-blur-sm text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200/50 shadow-sm">
+                {{ dog.breed.name }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="flex flex-col flex-1 p-4 gap-3">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-bold text-base text-slate-900 leading-snug">{{ dog.name }}</h3>
+              <div class="flex items-center gap-0.5 shrink-0">
+                <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                <span class="text-xs text-slate-500 font-medium">5.0</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs text-slate-500">
+              <span class="flex items-center gap-1">
+                <i class="fa-regular fa-calendar text-slate-400"></i>
+                {{ dog.age_months }} tháng tuổi
+              </span>
+              <span class="flex items-center gap-1">
+                <i class="fa-solid fa-palette text-slate-400"></i>
+                {{ dog.color }}
+              </span>
+            </div>
+
+            <div class="text-xl font-extrabold text-amber-600 mt-auto">
+              {{ dog.price|floatformat:0 }} <span class="text-sm font-semibold text-slate-400">₫</span>
+            </div>
+
+            <div class="flex gap-2 mt-1">
+              <a href="{% url 'dog_detail' dog.id %}" class="flex-1 text-center py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                Chi Tiết
+              </a>
+              <a href="{% url 'add_to_cart' dog.id %}" class="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 rounded-xl transition-colors shadow-sm">
+                <i class="fa-solid fa-cart-plus text-xs"></i>
+                Thêm Giỏ
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-20 text-slate-400">
+        <i class="fa-solid fa-dog text-5xl mb-4 block text-slate-200"></i>
+        <p class="font-medium">Chưa có chó nào được đăng bán</p>
+        <p class="text-sm mt-1">Hãy quay lại sau nhé!</p>
+      </div>
+    {% endif %}
+
+  </section>
+
+  <!-- =========================================================
+       AI DETECTION BANNER
+  ========================================================= -->
+  <section class="max-w-7xl mx-auto px-6 lg:px-8 mb-24">
+    <div class="ai-banner-bg rounded-3xl overflow-hidden relative">
+      <!-- decorative blur -->
+      <div class="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/4 blur-2xl pointer-events-none"></div>
+      <div class="absolute bottom-0 left-1/3 w-40 h-40 bg-white/10 rounded-full translate-y-1/2 blur-xl pointer-events-none"></div>
+
+      <div class="grid lg:grid-cols-2 items-center gap-0">
+        <!-- Left: Text -->
+        <div class="p-10 lg:p-14 flex flex-col gap-6 relative z-10">
+          <div class="inline-flex items-center gap-2 self-start bg-white/20 text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/30">
+            <i class="fa-solid fa-microchip"></i>
+            Công nghệ AI tiên tiến
+          </div>
+
+          <h2 class="text-3xl lg:text-4xl xl:text-5xl font-black text-white leading-tight">
+            Nhận Diện Giống Chó<br/><span class="text-amber-200">Chỉ Trong 3 Giây</span>
+          </h2>
+
+          <p class="text-white/80 text-base leading-relaxed max-w-md">
+            Chụp hoặc tải ảnh chú chó lên — AI của chúng tôi sẽ nhận diện chính xác giống chó và gợi ý những bé cùng giống đang được bán.
+          </p>
+
+          <div class="flex flex-wrap gap-4 items-center">
+            <a href="{% url 'detect_breed' %}" class="inline-flex items-center gap-2.5 bg-white text-amber-700 font-bold px-7 py-3.5 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 text-base">
+              <i class="fa-solid fa-camera"></i>
+              Nhận Diện Ngay
+              <i class="fa-solid fa-arrow-right text-sm"></i>
+            </a>
+          </div>
+
+          <div class="flex flex-wrap gap-5 pt-2">
+            <div class="flex items-center gap-2 text-white/80 text-sm">
+              <i class="fa-solid fa-check-circle text-amber-200"></i>
+              120+ giống chó
+            </div>
+            <div class="flex items-center gap-2 text-white/80 text-sm">
+              <i class="fa-solid fa-check-circle text-amber-200"></i>
+              Miễn phí hoàn toàn
+            </div>
+            <div class="flex items-center gap-2 text-white/80 text-sm">
+              <i class="fa-solid fa-check-circle text-amber-200"></i>
+              Kết quả tức thì
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Illustration -->
+        <div class="relative hidden lg:flex items-end justify-end h-full min-h-[360px]">
+          <div class="absolute bottom-0 right-0 w-full h-full opacity-20 bg-gradient-to-l from-transparent to-amber-900 rounded-r-3xl"></div>
+          <img
+            src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=85&fit=crop&crop=entropy"
+            alt="AI nhận diện giống chó"
+            class="object-cover object-center w-full h-full rounded-r-3xl max-h-96 lg:max-h-none"
+            style="max-height: 400px;"
+            loading="lazy"
+          />
+          <!-- scan overlay effect -->
+          <div class="absolute inset-0 flex items-center justify-center rounded-r-3xl pointer-events-none">
+            <div class="border-2 border-white/50 rounded-2xl w-40 h-40 relative">
+              <div class="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-white rounded-tl-lg"></div>
+              <div class="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-white rounded-tr-lg"></div>
+              <div class="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-white rounded-bl-lg"></div>
+              <div class="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-white rounded-br-lg"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-{% endblock %}
+  </section>
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================= -->
+  <footer class="bg-slate-900 text-slate-400">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-3 gap-10 mb-10">
+        <!-- Brand -->
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center gap-2.5">
+            <span class="flex items-center justify-center w-9 h-9 bg-amber-500 rounded-xl text-white text-lg">
+              <i class="fa-solid fa-paw"></i>
+            </span>
+            <span class="font-black text-xl text-white">Dog<span class="text-amber-400">Shop</span></span>
+          </div>
+          <p class="text-sm leading-relaxed">
+            Nơi kết nối những chú chó đáng yêu với gia đình yêu thương. Chất lượng — Uy tín — Tận tâm.
+          </p>
+          <div class="flex gap-3 mt-1">
+            <a href="#" class="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-500 hover:text-amber-400 hover:bg-slate-700 transition-colors">
+              <i class="fa-brands fa-facebook-f text-xs"></i>
+            </a>
+            <a href="#" class="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-500 hover:text-amber-400 hover:bg-slate-700 transition-colors">
+              <i class="fa-brands fa-instagram text-xs"></i>
+            </a>
+            <a href="#" class="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-500 hover:text-amber-400 hover:bg-slate-700 transition-colors">
+              <i class="fa-brands fa-tiktok text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Dịch Vụ</h4>
+          <ul class="flex flex-col gap-2.5 text-sm">
+            <li><a href="{% url 'dogs_list' %}" class="hover:text-amber-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-amber-500/50"></i>Mua Chó</a></li>
+            <li><a href="{% url 'detect_breed' %}" class="hover:text-amber-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-amber-500/50"></i>Nhận Diện AI</a></li>
+            <li><a href="{% url 'view_cart' %}" class="hover:text-amber-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-amber-500/50"></i>Giỏ Hàng</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'order_history' %}" class="hover:text-amber-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-amber-500/50"></i>Đơn Hàng</a></li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div>
+          <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Liên Hệ</h4>
+          <ul class="flex flex-col gap-3 text-sm">
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-phone text-amber-500 mt-0.5 shrink-0"></i>
+              <span>0123-456-789</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-envelope text-amber-500 mt-0.5 shrink-0"></i>
+              <span>info@dogshop.vn</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-location-dot text-amber-500 mt-0.5 shrink-0"></i>
+              <span>Hồ Chí Minh, Việt Nam</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+        <p>&copy; 2026 DogShop. All rights reserved.</p>
+        <p>Made with <i class="fa-solid fa-heart text-red-500/60 mx-0.5"></i> for dog lovers</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
